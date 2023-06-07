@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/cyan_50"
+    tools:context=".Admin.MobAttDetailViewActivity">
+
+    <include
+        android:id="@+id/toolbarview"
+        layout="@layout/toolbar" />
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_marginTop="10dp"
+        android:src="@drawable/images"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Name :- "
+            android:textColor="@color/black"
+            android:textSize="16dp"/>
+
+        <TextView
+            android:id="@+id/txt_Name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Dinesh Dangi"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            android:textSize="16dp"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Date:- "
+            android:textColor="@color/black"
+            android:textSize="16dp"/>
+
+        <TextView
+            android:id="@+id/txt_Date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="26-Apr-2023"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            android:textSize="16dp"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="In Time:- "
+            android:textColor="@color/black"
+            android:textSize="16dp"/>
+
+        <TextView
+            android:id="@+id/txt_InTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="10:01 AM"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            android:textSize="16dp"/>
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Out Time:- "
+            android:textColor="@color/black"
+            android:textSize="16dp"/>
+
+        <TextView
+            android:id="@+id/txt_OutTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="06:15 PM"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            android:textSize="16dp"/>
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btn_Approve"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginRight="5dp"
+            android:text="Approve"/>
+
+        <Button
+            android:id="@+id/btn_Disapprove"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginLeft="5dp"
+            android:text="DisApprove"/>
+
+    </LinearLayout>
+
+</LinearLayout>
