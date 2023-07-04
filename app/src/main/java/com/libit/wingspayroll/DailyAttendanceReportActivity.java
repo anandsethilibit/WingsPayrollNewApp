@@ -119,6 +119,7 @@ public class DailyAttendanceReportActivity extends AppCompatActivity {
         });
     }
 
+
     @Override
     public void onBackPressed() {
         super.onBackPressed();
@@ -177,11 +178,11 @@ public class DailyAttendanceReportActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
             }
+
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 Toast.makeText(DailyAttendanceReportActivity.this, t.toString(), Toast.LENGTH_SHORT).show();
             }
         });
     }
-
 }

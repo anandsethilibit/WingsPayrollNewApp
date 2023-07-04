@@ -15,13 +15,29 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.libit.wingspayroll.Adapter.MobileAttendanceAdapter;
+import com.libit.wingspayroll.Model.MobileAttendanceModel;
+import com.libit.wingspayroll.Network.ApiClient;
 import com.libit.wingspayroll.Network.ApiServices;
 import com.libit.wingspayroll.R;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
+
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 
 public class MobileAttendanceActivity extends AppCompatActivity {
@@ -33,13 +49,11 @@ public class MobileAttendanceActivity extends AppCompatActivity {
     Calendar c;
     String Date;
     Button MobileAttendance;
-    RecyclerView attendanceRecycler;
-    //List<DailyAttendanceModel> services;
-    //DailyAttendanceAdapter adapter;
+    RecyclerView MAttendanceRecycler;
+    List<MobileAttendanceModel> services;
+    MobileAttendanceAdapter adapter;
     ApiServices mService;
     String User;
-
-
     Button Viewdetails;
 
 
@@ -48,16 +62,17 @@ public class MobileAttendanceActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mobile_attendance);
-
         loading = new ProgressDialog(this);
-        loading.setTitle("Get Attendance");
+        loading.setTitle("Get Data");
         loading.setMessage("Please wait...");
+        loading.setCancelable(false);
 
         nametxt = findViewById(R.id.nametxt);
         backbtn = findViewById(R.id.backbtn);
-        Viewdetails=findViewById(R.id.btn_Viewdetails);
+//        Viewdetails=findViewById(R.id.btn_Viewdetails);
         MobileAttendance=findViewById(R.id.btn_MobileAttendance);
-        //attendanceRecycler=findViewById(R.id.attendanceRecycler);
+        MAttendanceRecycler=findViewById(R.id.MattendanceRecycler);
+        MAttendanceRecycler.setLayoutManager(new LinearLayoutManager(this));
         Selectdate=findViewById(R.id.selectdateEt);
         nametxt.setText("Mobile Attendance Report");
         backbtn.setOnClickListener(new View.OnClickListener() {
@@ -93,13 +108,17 @@ public class MobileAttendanceActivity extends AppCompatActivity {
             }
         });
 
-        Viewdetails.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MobileAttendanceActivity.this,MobAttDetailViewActivity.class);
-                startActivity(intent);
-            }
-        });
+
+
+//        Viewdetails.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Intent intent = new Intent(MobileAttendanceActivity.this,MobAttDetailViewActivity.class);
+//                startActivity(intent);
+//            }
+//        });
+
+
 
         MobileAttendance.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -107,13 +126,16 @@ public class MobileAttendanceActivity extends AppCompatActivity {
                 if (TextUtils.isEmpty(Selectdate.getText().toString())) {
                     Toast.makeText(MobileAttendanceActivity.this, "Please select date", Toast.LENGTH_SHORT).show();
                 } else {
-                    //services = new ArrayList<>();
+                    services = new ArrayList<>();
                     loading.show();
-                    //DailyAttendance(Date);
+                    MobileAttendance(Date);
                 }
             }
         });
     }
+
+
+
 
     @Override
     public void onBackPressed() {
@@ -121,65 +143,76 @@ public class MobileAttendanceActivity extends AppCompatActivity {
     }
 
 
-//    private void DailyAttendance(String date) {
-//        mService = ApiClient.getClient().create(ApiServices.class);
-//        Call<ResponseBody> userCall = mService.attendance(date);
-//        userCall.enqueue(new Callback<ResponseBody>() {
-//            @Override
-//            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-//                ResponseBody user = response.body();
-//                try {
-//                    String data = user.string();
-//                    JSONObject responsejobj = new JSONObject(data);
-//
-//                    services.clear();
-//
-//                    String stauts = responsejobj.getString("Status_Code");
-//                    String message = responsejobj.getString("Message");
-//
-//                    if (stauts.equalsIgnoreCase("200")) {
-//                        JSONArray coursearray = responsejobj.getJSONArray("Data");
-//
-//                        for (int i = 0; i < coursearray.length(); i++) {
-//                            JSONObject dataobj = coursearray.getJSONObject(i);
-//                            String Name = dataobj.getString("EMPNAME");
-//                            String Intime = dataobj.getString("Intime");
-//                            String Outtime = dataobj.getString("OutTime");
-//
-////                            double intime  =  Double.parseDouble(Intime);
-////                            double outtime =  Double.parseDouble(Outtime);
-////                            double TotalTime = outtime - intime;
-//
-//
-//                            DailyAttendanceModel model = new DailyAttendanceModel();
-//                            model.setName(Name);
-//                            model.setDate(Date);
-//                            model.setIntime(Intime);
-//                            model.setOuttime(Outtime);
-//                            services.add(model);
-//
-//                            adapter = new DailyAttendanceAdapter(getApplicationContext(),services);
-//                            attendanceRecycler.setAdapter(adapter);
-//                            final DailyAttendanceModel finalModel = model;
-//                            loading.dismiss();
-//                        }
-//                        loading.dismiss();
-//                        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
-//                    }else {
-//                        Toast.makeText(getApplicationContext(),message,Toast.LENGTH_SHORT).show();
-//                    }
-//                } catch (JSONException e) {
-//                    e.printStackTrace();
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//            @Override
-//            public void onFailure(Call<ResponseBody> call, Throwable t) {
-//                Toast.makeText(MobileAttendanceActivity.this, t.toString(), Toast.LENGTH_SHORT).show();
-//            }
-//        });
-//    }
+    private void MobileAttendance(String date) {
+        mService = ApiClient.getClient().create(ApiServices.class);
+        Call<ResponseBody> userCall = mService.Mobileattendance(date);
+        userCall.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                ResponseBody user = response.body();
+                try {
+                    String data = user.string();
+                    JSONObject responsejobj = new JSONObject(data);
 
+                    services.clear();
 
+                    String stauts = responsejobj.getString("Status_Code");
+                    String message = responsejobj.getString("Message");
+
+                    if (stauts.equalsIgnoreCase("200")) {
+                        JSONArray coursearray = responsejobj.getJSONArray("Data1");
+
+                        for (int i = 0; i < coursearray.length(); i++) {
+                            JSONObject dataobj = coursearray.getJSONObject(i);
+                            String EmpName = dataobj.getString("EmpName");
+                            String EmpCode = dataobj.getString("EmpCode");
+                            String Date = dataobj.getString("Date");
+                            String Id = dataobj.getString("id");
+                            String Days = dataobj.getString("Days");
+                            String Intime = dataobj.getString("InTime");
+                            String Outtime = dataobj.getString("OutTime");
+                            String Image = dataobj.getString("Image");
+                            String InAddress = dataobj.getString("InAddress");
+
+//                            double intime  =  Double.parseDouble(Intime);
+//                            double outtime =  Double.parseDouble(Outtime);
+//                            double TotalTime = outtime - intime;
+
+                            MobileAttendanceModel model = new MobileAttendanceModel();
+                            model.setName(EmpName);
+                            model.setId(Id);
+                            model.setEmpCode(EmpCode);
+                            model.setDate(Date);
+                            model.setDays(Days);
+                            model.setInTime(Intime);
+                            model.setOutTime(Outtime);
+                            model.setAtten_image(Image);
+                            model.setInAddress(InAddress);
+                            services.add(model);
+
+                            adapter = new MobileAttendanceAdapter(getApplicationContext(),services);
+                            MAttendanceRecycler.setAdapter(adapter);
+                            final MobileAttendanceModel finalModel = model;
+                            loading.dismiss();
+                        }
+                        loading.dismiss();
+                        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+                    }else {
+                        loading.dismiss();
+                        Toast.makeText(getApplicationContext(),message,Toast.LENGTH_SHORT).show();
+                    }
+                } catch (JSONException e) {
+                    loading.dismiss();
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    loading.dismiss();
+                    e.printStackTrace();
+                }
+            }
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Toast.makeText(MobileAttendanceActivity.this, t.toString(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
 }

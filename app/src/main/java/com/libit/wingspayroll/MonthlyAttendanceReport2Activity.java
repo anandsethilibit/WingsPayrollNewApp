@@ -1,5 +1,6 @@
 package com.libit.wingspayroll;
 
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -7,6 +8,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -34,6 +36,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class MonthlyAttendanceReport2Activity extends AppCompatActivity {
+    ImageView backbtn;
+    TextView nametxt;
     Button btngetMonthlyReport;
     ProgressDialog loading;
     String User,UserType,UserId;
@@ -54,6 +58,7 @@ public class MonthlyAttendanceReport2Activity extends AppCompatActivity {
 
 
 
+    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,13 +69,22 @@ public class MonthlyAttendanceReport2Activity extends AppCompatActivity {
         Userspinner = findViewById(R.id.Userspinner);
         monthlyrecyclerview=findViewById(R.id.recview);
         username=findViewById(R.id.txtusername);
+        backbtn = findViewById(R.id.backbtn);
+        nametxt = findViewById(R.id.nametxt);
+        nametxt.setText("Monthly Attendance");
+        backbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
         loading = new ProgressDialog(this);
         loading.setTitle("Get Attendance");
         loading.setMessage("Please wait...");
 
-        User = StaticDataHelper.getStringFromPreferences(MonthlyAttendanceReport2Activity.this, "UserName");
+        User = StaticDataHelper.getStringFromPreferences(MonthlyAttendanceReport2Activity.this, "Name");
         UserType = StaticDataHelper.getStringFromPreferences(MonthlyAttendanceReport2Activity.this, "Usertype");
-        UserId = StaticDataHelper.getStringFromPreferences(MonthlyAttendanceReport2Activity.this, "userid");
+        UserId = StaticDataHelper.getStringFromPreferences(MonthlyAttendanceReport2Activity.this, "EmpId");
 
         if(UserType.equalsIgnoreCase("Admin")){
             Userspinner.setVisibility(View.VISIBLE);
@@ -126,7 +140,7 @@ public class MonthlyAttendanceReport2Activity extends AppCompatActivity {
                         Toast.makeText(MonthlyAttendanceReport2Activity.this, "Please select Year ", Toast.LENGTH_SHORT).show();
                     }else {
                         loading.show();
-                        //getMonthlyAttendance(Month,Year,userdata,MonthNumber);
+                        getMonthlyAttendance(Month,Year,userdata,MonthNumber);
                     }
                 }
             }
@@ -138,7 +152,6 @@ public class MonthlyAttendanceReport2Activity extends AppCompatActivity {
     public void onBackPressed() {
         super.onBackPressed();
     }
-
 
     private void getuser() {
         mService = ApiClient.getClient().create(ApiServices.class);
@@ -174,7 +187,6 @@ public class MonthlyAttendanceReport2Activity extends AppCompatActivity {
                                     android.R.layout.simple_spinner_item, user_name);
                             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                             Userspinner.setAdapter(adapter);
-
                         }
                     } else {
                         Toast.makeText(MonthlyAttendanceReport2Activity.this, message, Toast.LENGTH_SHORT).show();
@@ -191,7 +203,6 @@ public class MonthlyAttendanceReport2Activity extends AppCompatActivity {
             }
         });
     }
-
 
     private void getMonthlyAttendance(String Month,String Year,String empid,Integer mon) {
         mService = ApiClient.getClient().create(ApiServices.class);
@@ -220,9 +231,9 @@ public class MonthlyAttendanceReport2Activity extends AppCompatActivity {
                             String Intime = dataobj.getString("Intime");
                             String OutTime = dataobj.getString("OutTime");
                             String Duration = dataobj.getString("Duration");
-                            String LateIn = dataobj.getString("LateIn");
-                            String LateOut = dataobj.getString("LateOut");
-                            String Ot = dataobj.getString("Ot");
+//                            String LateIn = dataobj.getString("LateIn");
+//                            String LateOut = dataobj.getString("LateOut");
+//                            String Ot = dataobj.getString("Ot");
                             String Status = dataobj.getString("Status");
 
                             MonthlyAttendanceModel model = new MonthlyAttendanceModel();
@@ -234,9 +245,9 @@ public class MonthlyAttendanceReport2Activity extends AppCompatActivity {
                             model.setIntime(Intime);
                             model.setOutTime(OutTime);
                             model.setDuration(Duration);
-                            model.setLateIn(LateIn);
-                            model.setLateOut(LateOut);
-                            model.setOverTime(Ot);
+//                            model.setLateIn(LateIn);
+//                            model.setLateOut(LateOut);
+//                            model.setOverTime(Ot);
                             model.setStatus(Status);
                             services.add(model);
 
@@ -261,6 +272,7 @@ public class MonthlyAttendanceReport2Activity extends AppCompatActivity {
             }
         });
     }
+
 
 
 
@@ -294,6 +306,5 @@ public class MonthlyAttendanceReport2Activity extends AppCompatActivity {
 
         }
     }
-
 }
 

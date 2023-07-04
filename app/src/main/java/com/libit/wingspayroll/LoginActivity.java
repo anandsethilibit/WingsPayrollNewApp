@@ -111,7 +111,6 @@ public class LoginActivity extends AppCompatActivity {
                         String DesName = jobj.getString("DesName");
                         String UnitName = jobj.getString("UnitName");
 
-
                         StaticDataHelper.setStringInPreferences(LoginActivity.this, "EmpId", EmpId);
                         StaticDataHelper.setStringInPreferences(LoginActivity.this, "Code", Code);
                         StaticDataHelper.setStringInPreferences(LoginActivity.this, "Name", Name);
@@ -206,5 +205,4 @@ public class LoginActivity extends AppCompatActivity {
             loading.dismiss();
         }
     }
-
 }

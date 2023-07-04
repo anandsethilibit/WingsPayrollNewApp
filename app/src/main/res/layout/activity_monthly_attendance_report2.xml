@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -8,6 +8,13 @@
     android:orientation="vertical"
     android:background="@color/cyan_50"
     tools:context=".MonthlyAttendanceReport2Activity">
+
+    <include
+        layout="@layout/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"/>
+
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/cardview"
@@ -224,4 +231,4 @@
 
     </HorizontalScrollView>
 
-</RelativeLayout>
+</LinearLayout>

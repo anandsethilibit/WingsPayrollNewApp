@@ -24,6 +24,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+
 import com.google.android.gms.location.LocationRequest;
 import com.libit.wingspayroll.Model.SendAttendenceModel;
 import com.libit.wingspayroll.Network.ApiClient;
@@ -80,6 +82,10 @@ public class CameraActivity extends AppCompatActivity implements LocationListene
 
 
         ivImagePhoto = findViewById(R.id.ivImagePhoto);
+
+        if(ContextCompat.checkSelfPermission(CameraActivity.this, android.Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED){
+            ActivityCompat.requestPermissions(CameraActivity.this,new String []{android.Manifest.permission.CAMERA},MY_CAMERA_PERMISSION_CODE);
+        }
 
 
         if (checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
@@ -141,21 +147,27 @@ public class CameraActivity extends AppCompatActivity implements LocationListene
 //          Toast.makeText(CameraActivity.this,name+"\n"+Id,Toast.LENGTH_SHORT).show();
 
             SendAttendenceModel model = new SendAttendenceModel();
-            model.setEmpid(EmpId);
+            //model.setEmpid(EmpId);
             model.setEmpCode(Code);
-            model.setEmployee_Name(Name);
-            model.setEmployee_number(number);
-            model.setAttendence_Photo(uploadImagePhoto);
+//            model.setEmployee_Name(Name);
+//            model.setEmployee_number(number);
+            model.setAtten_image(uploadImagePhoto);
 
             if (address.equals("null")){
-                model.setLocation(Address1);
+                model.setInAddress(Address1);
             }else{
-                model.setLocation(address);
+                model.setInAddress(address);
             }
 
-            Toast.makeText(getApplicationContext(), "" + address, Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "" + Address1, Toast.LENGTH_SHORT).show();
 
-            AttendeceData(model);
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    pd.show();
+                    AttendeceData(model);
+                }
+            }, 2000);
         }
     }
 

@@ -30,12 +30,19 @@ public interface ApiServices {
     @GET("api/GetDailyAtt")
     Call<ResponseBody> attendance(@Query("date") String date);
 
+    @GET("api/MobileAttendance")
+    Call<ResponseBody> Mobileattendance(@Query("date") String date);
+
     @GET ("api/GetMonthlyAtt")
     Call<ResponseBody>MonthlyAttendance(@Query("Month")String Month,@Query("Year")String Year,@Query("empid")String empid,
                                         @Query("mon")Integer mon);
     @GET("api/EmployeeData")
     Call<ResponseBody> getEmployee();
 
+    @POST("api/EmployeeStatus")
+    Call<ResponseBody> MAttendanceStatus(@Query("id") Integer id,@Query("status") String status);
+
     @GET("api/BirthdayReport")
     Call<ResponseBody> getEmployeeBirthday();
+
 }

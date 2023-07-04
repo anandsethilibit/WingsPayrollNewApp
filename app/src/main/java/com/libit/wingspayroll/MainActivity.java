@@ -151,7 +151,6 @@ public class MainActivity extends AppCompatActivity {
             LeaveApprovel.setVisibility(View.GONE);
             MobileAttendance.setVisibility(View.VISIBLE);
             DailyAttendance.setVisibility(View.VISIBLE);
-
         }else{
             attendecebtn.setVisibility(View.VISIBLE);
             leaveRequestbtn.setVisibility(View.GONE);
@@ -166,6 +165,7 @@ public class MainActivity extends AppCompatActivity {
             MobileAttendance.setVisibility(View.GONE);
             DailyAttendance.setVisibility(View.GONE);
         }
+
 
         attendecebtn.setOnClickListener(new View.OnClickListener() {
             @SuppressLint("SuspiciousIndentation")
@@ -192,6 +192,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+
         BirthdayAnniversary.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -199,8 +200,6 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
-
 
         MonthlyAttendance.setOnClickListener(new View.OnClickListener() {
             @Override
