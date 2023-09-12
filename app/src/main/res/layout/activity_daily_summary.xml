@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/cyan_50"
-    tools:context=".DailyAttendanceReportActivity">
+    tools:context=".Admin.DailySummaryActivity">
 
     <ProgressBar
         android:id="@+id/prgruser"
@@ -20,11 +20,11 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-    <include
-        layout="@layout/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"/>
+        <include
+            layout="@layout/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"/>
 
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
@@ -105,14 +105,15 @@
                     android:textSize="18dp"/>
 
                 <Button
-                    android:id="@+id/btn_DailyAttendance"
+                    android:id="@+id/btn_GetSummary"
                     android:layout_gravity="center"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:layout_marginBottom="10dp"
-                    android:text="Get Daily Attendance Report"
+                    android:text="Get Summary"
                     android:backgroundTint="@color/blue_500"/>
+
             </LinearLayout>
 
         </androidx.cardview.widget.CardView>
@@ -121,7 +122,7 @@
             android:layout_margin="10dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/attendanceRecycler"/>
+            android:id="@+id/MattendanceRecycler"/>
 
     </LinearLayout>
 

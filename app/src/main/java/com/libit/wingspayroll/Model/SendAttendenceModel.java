@@ -7,47 +7,9 @@ public class SendAttendenceModel {
             atten_image,
             InAddress,
             InLatitude,
-            InLongitude;
-
-//    public String getEmployee_number() {
-//        return Employee_number;
-//    }
-//
-//    public void setEmployee_number(String employee_number) {
-//        Employee_number = employee_number;
-//    }
-//
-//    public String getEmployee_Name() {
-//        return Employee_Name;
-//    }
-//
-//    public void setEmployee_Name(String employee_Name) {
-//        Employee_Name = employee_Name;
-//    }
-//
-//    public String getAttendence_Photo() {
-//        return Attendence_Photo;
-//    }
-//
-//    public void setAttendence_Photo(String attendence_Photo) {
-//        Attendence_Photo = attendence_Photo;
-//    }
-//
-//    public String getLocation() {
-//        return Location;
-//    }
-//
-//    public void setLocation(String location) {
-//        Location = location;
-//    }
-//
-//    public String getEmpid() {
-//        return Empid;
-//    }
-//
-//    public void setEmpid(String empid) {
-//        Empid = empid;
-//    }
+            InLongitude,
+            EmpId,
+            UnitId;
 
     public String getEmpCode() {
         return EmpCode;
@@ -87,6 +49,22 @@ public class SendAttendenceModel {
 
     public void setInLongitude(String inLongitude) {
         InLongitude = inLongitude;
+    }
+
+    public String getEmpId() {
+        return EmpId;
+    }
+
+    public void setEmpId(String empId) {
+        EmpId = empId;
+    }
+
+    public String getUnitId() {
+        return UnitId;
+    }
+
+    public void setUnitId(String unitId) {
+        UnitId = unitId;
     }
 }
 

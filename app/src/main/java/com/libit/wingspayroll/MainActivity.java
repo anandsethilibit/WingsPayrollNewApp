@@ -28,6 +28,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.location.LocationRequest;
+import com.libit.wingspayroll.Admin.DailySummaryActivity;
 import com.libit.wingspayroll.Admin.MobileAttendanceActivity;
 import com.libit.wingspayroll.Network.StaticDataHelper;
 
@@ -36,12 +37,11 @@ import java.util.List;
 import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
-
     Toolbar toolbar;
     String User,UserType;
     TextView usernametv,gradienttv;
-    CardView attendecebtn,leaveRequestbtn,ShowAttendancebtn,DocumentUploadbtn,DocumentShowbtn,BirthdayAnniversary,
-            UpdateProfile,MonthlyAttendance,LeaveApprovel,MobileAttendance,DailyAttendance;
+    CardView Attendecebtn,leaveRequestbtn,ShowAttendancebtn,DocumentUploadbtn,DocumentShowbtn,BirthdayAnniversary,
+            UpdateProfile,MonthlyAttendance,LeaveApprovel,MobileAttendance,DailyAttendance,Qrcodescanner,DailySummary;
     TextView myattendance;
 
 
@@ -67,6 +67,7 @@ public class MainActivity extends AppCompatActivity {
         switch (id){
             case R.id.itemlogout:
                 StaticDataHelper.setBooleanInPreferences(MainActivity.this, "islogin",false);
+                StaticDataHelper.setBooleanInPreferences(MainActivity.this, "isAdminlogin",false);
                 Toast.makeText(this, "Logout", Toast.LENGTH_SHORT).show();
                 startActivity(new Intent(MainActivity.this,Splash2Activity.class));
                 MainActivity.this.finishAffinity();
@@ -84,22 +85,18 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-
-        User = StaticDataHelper.getStringFromPreferences(MainActivity.this, "Name");
-        UserType = StaticDataHelper.getStringFromPreferences(MainActivity.this, "Usertype");
-
-
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
         lodingBar = new ProgressDialog(MainActivity.this);
         lodingBar.setTitle("Get Location...");
         lodingBar.setMessage("Please wait...");
 
+        User = StaticDataHelper.getStringFromPreferences(MainActivity.this, "Name");
+        UserType = StaticDataHelper.getStringFromPreferences(MainActivity.this, "Usertype");
+
         prgruser=findViewById(R.id.prgruser);
         prgruser.setVisibility(View.GONE);
-        attendecebtn = findViewById(R.id.Card_attendecebtn);
+        Attendecebtn = findViewById(R.id.Card_attendecebtn);
         leaveRequestbtn=findViewById(R.id.Card_leaveRequestbtn);
         ShowAttendancebtn=findViewById(R.id.Card_ShowAttendancebtn);
         DocumentUploadbtn=findViewById(R.id.Card_DocumentUpload);
@@ -110,9 +107,12 @@ public class MainActivity extends AppCompatActivity {
         MobileAttendance=findViewById(R.id.card_MobileAttendance);
         LeaveApprovel=findViewById(R.id.card_LeaveApprovel);
         DailyAttendance=findViewById(R.id.card_DailyAttendance);
+        Qrcodescanner=findViewById(R.id.card_qrcodescanner);
+        DailySummary=findViewById(R.id.card_DailySummary);
         myattendance=findViewById(R.id.txt_myattendance);
         usernametv = findViewById(R.id.usernametv);
         usernametv.setText("User :-" + User);
+
 
         //Runtime permissions
         if(ContextCompat.checkSelfPermission(MainActivity.this, android.Manifest.permission.ACCESS_FINE_LOCATION)
@@ -121,6 +121,7 @@ public class MainActivity extends AppCompatActivity {
                     android.Manifest.permission.ACCESS_FINE_LOCATION
             },100);
         }
+
 
 
 //        gradienttv = findViewById(R.id.gradienttv);
@@ -139,8 +140,9 @@ public class MainActivity extends AppCompatActivity {
 //        gradienttv.startAnimation((Animation) AnimationUtils.loadAnimation(MainActivity.this, R.anim.myanime));
 
 
+
         if(UserType.equalsIgnoreCase("Admin")){
-            attendecebtn.setVisibility(View.GONE);
+            Attendecebtn.setVisibility(View.GONE);
             leaveRequestbtn.setVisibility(View.GONE);
             DocumentUploadbtn.setVisibility(View.GONE);
             DocumentShowbtn.setVisibility(View.GONE);
@@ -148,12 +150,14 @@ public class MainActivity extends AppCompatActivity {
             BirthdayAnniversary.setVisibility(View.VISIBLE);
             ShowAttendancebtn.setVisibility(View.GONE);
             MonthlyAttendance.setVisibility(View.VISIBLE);
-            LeaveApprovel.setVisibility(View.GONE);
+            LeaveApprovel.setVisibility(View.VISIBLE);
             MobileAttendance.setVisibility(View.VISIBLE);
             DailyAttendance.setVisibility(View.VISIBLE);
+            Qrcodescanner.setVisibility(View.GONE);
+            DailySummary.setVisibility(View.VISIBLE);
         }else{
-            attendecebtn.setVisibility(View.VISIBLE);
-            leaveRequestbtn.setVisibility(View.GONE);
+            Attendecebtn.setVisibility(View.VISIBLE);
+            leaveRequestbtn.setVisibility(View.VISIBLE);
             DocumentUploadbtn.setVisibility(View.GONE);
             DocumentShowbtn.setVisibility(View.GONE);
             BirthdayAnniversary.setVisibility(View.VISIBLE);
@@ -164,14 +168,16 @@ public class MainActivity extends AppCompatActivity {
             LeaveApprovel.setVisibility(View.GONE);
             MobileAttendance.setVisibility(View.GONE);
             DailyAttendance.setVisibility(View.GONE);
+            Qrcodescanner.setVisibility(View.VISIBLE);
+            DailySummary.setVisibility(View.GONE);
         }
 
-
-        attendecebtn.setOnClickListener(new View.OnClickListener() {
+        Attendecebtn.setOnClickListener(new View.OnClickListener() {
             @SuppressLint("SuspiciousIndentation")
             @Override
             public void onClick(View v) {
-                ActivityCompat.requestPermissions(MainActivity.this,
+                ActivityCompat.requestPermissions(
+                        MainActivity.this,
                         new String[]
                                 {android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION},
                         101);
@@ -192,7 +198,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
         BirthdayAnniversary.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -209,7 +214,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
         MobileAttendance.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -225,6 +229,47 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        Qrcodescanner.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent=new Intent(MainActivity.this,QrCodeScannerActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        DailySummary.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent=new Intent(MainActivity.this, DailySummaryActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        leaveRequestbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this,RequestLeaveActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        LeaveApprovel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this,LeaveApprovalActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        DocumentUploadbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this,DocumentUpload.class);
+                startActivity(intent);
+            }
+        });
+
     }
 
     @Override
@@ -245,7 +290,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-
     public void checkLocationPermission() {
         LocationRequest locationRequest = LocationRequest.create();
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
@@ -254,7 +298,6 @@ public class MainActivity extends AppCompatActivity {
         String permission = "android.permission.ACCESS_FINE_LOCATION";
         int res = this.checkCallingOrSelfPermission(permission);
     }
-
 
     private LocationListener mLocationListener = new LocationListener() {
         @Override
@@ -276,7 +319,6 @@ public class MainActivity extends AppCompatActivity {
         public void onStatusChanged(String provider, int status, Bundle extras) {
         }
     };
-
 
     public void getlocation1() {
         lodingBar.show();
@@ -317,7 +359,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-
     public void geocede1() {
         Geocoder geocoder;
         List<Address> addresses;
@@ -341,7 +382,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-
     public void showSettingsAlert() {
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(MainActivity.this);
         alertDialog.setTitle("GPS is not Enabled!");
@@ -359,5 +399,6 @@ public class MainActivity extends AppCompatActivity {
         });
         alertDialog.show();
     }
+
 
 }

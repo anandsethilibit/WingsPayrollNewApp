@@ -32,7 +32,9 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -47,7 +49,7 @@ public class MobileAttendanceActivity extends AppCompatActivity {
     EditText Selectdate;
     int mYear, mMonth, mDay;
     Calendar c;
-    String Date;
+    String date;
     Button MobileAttendance;
     RecyclerView MAttendanceRecycler;
     List<MobileAttendanceModel> services;
@@ -66,10 +68,8 @@ public class MobileAttendanceActivity extends AppCompatActivity {
         loading.setTitle("Get Data");
         loading.setMessage("Please wait...");
         loading.setCancelable(false);
-
         nametxt = findViewById(R.id.nametxt);
         backbtn = findViewById(R.id.backbtn);
-//        Viewdetails=findViewById(R.id.btn_Viewdetails);
         MobileAttendance=findViewById(R.id.btn_MobileAttendance);
         MAttendanceRecycler=findViewById(R.id.MattendanceRecycler);
         MAttendanceRecycler.setLayoutManager(new LinearLayoutManager(this));
@@ -82,6 +82,8 @@ public class MobileAttendanceActivity extends AppCompatActivity {
             }
         });
 
+        date = new SimpleDateFormat("dd-MMM-yyyy", Locale.getDefault()).format(new Date());
+        Selectdate.setText(date);
 
         Selectdate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -90,10 +92,8 @@ public class MobileAttendanceActivity extends AppCompatActivity {
                 mYear = c.get(Calendar.YEAR);
                 mMonth = c.get(Calendar.MONTH);
                 mDay = c.get(Calendar.DAY_OF_MONTH);
-
                 DatePickerDialog datePickerDialog = new DatePickerDialog(MobileAttendanceActivity.this,
                         new DatePickerDialog.OnDateSetListener() {
-
                             @Override
                             public void onDateSet(DatePicker view, int year,
                                                   int monthOfYear, int dayOfMonth) {
@@ -101,7 +101,7 @@ public class MobileAttendanceActivity extends AppCompatActivity {
                                 SimpleDateFormat format = new SimpleDateFormat("dd-MMM-yyyy");
                                 String strDate = format.format(c.getTime());
                                 Selectdate.setText(strDate);
-                                Date=strDate.toString();
+                                date=strDate.toString();
                             }
                         }, mYear, mMonth, mDay);
                 datePickerDialog.show();
@@ -128,7 +128,7 @@ public class MobileAttendanceActivity extends AppCompatActivity {
                 } else {
                     services = new ArrayList<>();
                     loading.show();
-                    MobileAttendance(Date);
+                    MobileAttendance(date);
                 }
             }
         });
@@ -153,9 +153,7 @@ public class MobileAttendanceActivity extends AppCompatActivity {
                 try {
                     String data = user.string();
                     JSONObject responsejobj = new JSONObject(data);
-
                     services.clear();
-
                     String stauts = responsejobj.getString("Status_Code");
                     String message = responsejobj.getString("Message");
 

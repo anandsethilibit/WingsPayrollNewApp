@@ -28,7 +28,6 @@ import java.util.List;
 
 
 public class MonthlyAttendanceReportActivity extends AppCompatActivity{
-
     Button btngetMonthlyReport;
     ProgressDialog loading;
     EditText fromdateEt, todateet;
@@ -45,17 +44,14 @@ public class MonthlyAttendanceReportActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_monthly_attendance_report);
-
+        loading = new ProgressDialog(this);
+        loading.setTitle("Get Attendance");
+        loading.setMessage("Please wait...");
         btngetMonthlyReport=findViewById(R.id.getAttendanceMonthly);
         fromdateEt=findViewById(R.id.fromdatetv);
         todateet=findViewById(R.id.todatetv);
         Userspinner = findViewById(R.id.Userspinner);
-
-
         User = StaticDataHelper.getStringFromPreferences(MonthlyAttendanceReportActivity.this, "UserName");
-        loading = new ProgressDialog(this);
-        loading.setTitle("Get Attendance");
-        loading.setMessage("Please wait...");
 
         //getuser();
 
@@ -71,19 +67,15 @@ public class MonthlyAttendanceReportActivity extends AppCompatActivity{
             }
         });
 
-
         fromdateEt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 c = Calendar.getInstance();
                 mYear = c.get(Calendar.YEAR);
                 mMonth = c.get(Calendar.MONTH);
                 mDay = c.get(Calendar.DAY_OF_MONTH);
-
                 DatePickerDialog datePickerDialog = new DatePickerDialog(MonthlyAttendanceReportActivity.this,
                         new DatePickerDialog.OnDateSetListener() {
-
                             @Override
                             public void onDateSet(DatePicker view, int year,
                                                   int monthOfYear, int dayOfMonth) {
@@ -98,7 +90,6 @@ public class MonthlyAttendanceReportActivity extends AppCompatActivity{
             }
         });
 
-
         todateet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -106,10 +97,8 @@ public class MonthlyAttendanceReportActivity extends AppCompatActivity{
                 mYear = c.get(Calendar.YEAR);
                 mMonth = c.get(Calendar.MONTH);
                 mDay = c.get(Calendar.DAY_OF_MONTH);
-
                 DatePickerDialog datePickerDialog = new DatePickerDialog(MonthlyAttendanceReportActivity.this,
                         new DatePickerDialog.OnDateSetListener() {
-
                             @RequiresApi(api = Build.VERSION_CODES.O)
                             @Override
                             public void onDateSet(DatePicker view, int year,
@@ -125,7 +114,6 @@ public class MonthlyAttendanceReportActivity extends AppCompatActivity{
             }
         });
 
-
         btngetMonthlyReport.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -136,12 +124,14 @@ public class MonthlyAttendanceReportActivity extends AppCompatActivity{
                 }
             }
         });
+
     }
 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
     }
+
 
 //    private void getuser() {
 //        mService = ApiClient.getClient().create(ApiServices.class);
@@ -195,5 +185,6 @@ public class MonthlyAttendanceReportActivity extends AppCompatActivity{
 //            }
 //        });
 //    }
+//
 }
 

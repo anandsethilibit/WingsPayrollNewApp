@@ -1,5 +1,6 @@
-package com.libit.wingspayroll;
+package com.libit.wingspayroll.Admin;
 
+import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.os.Bundle;
@@ -15,18 +16,14 @@ import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.google.android.material.snackbar.Snackbar;
-import com.libit.wingspayroll.Adapter.DailyAttendanceAdapter;
-import com.libit.wingspayroll.Model.DailyAttendanceModel;
+import com.libit.wingspayroll.Adapter.MobileAttendanceAdapter;
+import com.libit.wingspayroll.Model.MobileAttendanceModel;
 import com.libit.wingspayroll.Network.ApiClient;
 import com.libit.wingspayroll.Network.ApiServices;
-import com.libit.wingspayroll.Network.StaticDataHelper;
-
+import com.libit.wingspayroll.R;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -37,46 +34,47 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class DailyAttendanceReportActivity extends AppCompatActivity {
+public class DailySummaryActivity extends AppCompatActivity {
     ImageView backbtn;
     TextView nametxt;
-    Button btn_DailyAttendance;
     ProgressDialog loading;
     EditText Selectdate;
     int mYear, mMonth, mDay;
     Calendar c;
     String date;
-    RecyclerView attendanceRecycler;
-    List<DailyAttendanceModel> services;
-    DailyAttendanceAdapter adapter;
+    Button GetSummary;
+    RecyclerView MAttendanceRecycler;
+    List<MobileAttendanceModel> services;
+    MobileAttendanceAdapter adapter;
     ApiServices mService;
-    String User;
-    List<String> unit_id,unit_name;
-    Integer unitdata;
+    List<String> unit_id, unit_name;
+    String unitdata;
     Spinner Unitspinner;
     ProgressBar prgruser;
 
+
+    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_daily_attendance_report);
+        setContentView(R.layout.activity_daily_summary);
         loading = new ProgressDialog(this);
-        loading.setTitle("Get Attendance");
+        loading.setTitle("Get Summary");
         loading.setMessage("Please wait...");
-        btn_DailyAttendance=findViewById(R.id.btn_DailyAttendance);
-        Selectdate=findViewById(R.id.selectdateEt);
-        attendanceRecycler=findViewById(R.id.attendanceRecycler);
+        nametxt = findViewById(R.id.nametxt);
+        backbtn = findViewById(R.id.backbtn);
         prgruser=findViewById(R.id.prgruser);
         Unitspinner=findViewById(R.id.Unitspinner);
-        backbtn = findViewById(R.id.backbtn);
-        nametxt = findViewById(R.id.nametxt);
-        nametxt.setText("Daily Attendance");
+        GetSummary=findViewById(R.id.btn_GetSummary);
+        MAttendanceRecycler=findViewById(R.id.MattendanceRecycler);
+        MAttendanceRecycler.setLayoutManager(new LinearLayoutManager(this));
+        Selectdate=findViewById(R.id.selectdateEt);
+        nametxt.setText("Summary Report");
         backbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -88,14 +86,12 @@ public class DailyAttendanceReportActivity extends AppCompatActivity {
 
         date = new SimpleDateFormat("dd-MMM-yyyy", Locale.getDefault()).format(new Date());
         Selectdate.setText(date);
-        User = StaticDataHelper.getStringFromPreferences(DailyAttendanceReportActivity.this, "EmpId");
-
 
         Unitspinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                unitdata = Integer.valueOf(unit_id.get(position));
-                Snackbar.make(view, " EmpId " +unitdata+ " Selected ", Snackbar.LENGTH_SHORT).show();
+                unitdata = unit_id.get(position);
+                //Snackbar.make(view, " EmpId " +userdata+ " Selected ", Snackbar.LENGTH_SHORT).show();
             }
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
@@ -110,8 +106,7 @@ public class DailyAttendanceReportActivity extends AppCompatActivity {
                 mYear = c.get(Calendar.YEAR);
                 mMonth = c.get(Calendar.MONTH);
                 mDay = c.get(Calendar.DAY_OF_MONTH);
-
-                DatePickerDialog datePickerDialog = new DatePickerDialog(DailyAttendanceReportActivity.this,
+                DatePickerDialog datePickerDialog = new DatePickerDialog(DailySummaryActivity.this,
                         new DatePickerDialog.OnDateSetListener() {
                             @Override
                             public void onDateSet(DatePicker view, int year,
@@ -127,22 +122,20 @@ public class DailyAttendanceReportActivity extends AppCompatActivity {
             }
         });
 
-        btn_DailyAttendance.setOnClickListener(new View.OnClickListener() {
+        GetSummary.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (TextUtils.isEmpty(Selectdate.getText().toString())) {
-                    Toast.makeText(DailyAttendanceReportActivity.this, "Please select date", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(DailySummaryActivity.this, "Please select date", Toast.LENGTH_SHORT).show();
                 } else {
                     services = new ArrayList<>();
                     loading.show();
-                    DailyAttendance(date,unitdata);
+                    GetSummary(date);
                 }
             }
         });
 
-
     }
-
 
     @Override
     public void onBackPressed() {
@@ -185,7 +178,7 @@ public class DailyAttendanceReportActivity extends AppCompatActivity {
                         prgruser.setVisibility(View.GONE);
                     } else {
                         prgruser.setVisibility(View.GONE);
-                        Toast.makeText(DailyAttendanceReportActivity.this, message, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(DailySummaryActivity.this, message, Toast.LENGTH_SHORT).show();
                     }
                 } catch (JSONException e) {
                     prgruser.setVisibility(View.GONE);
@@ -202,9 +195,9 @@ public class DailyAttendanceReportActivity extends AppCompatActivity {
         });
     }
 
-    private void DailyAttendance(String date,Integer unitId) {
+    private void GetSummary(String date) {
         mService = ApiClient.getClient().create(ApiServices.class);
-        Call<ResponseBody> userCall = mService.attendance(date,unitId);
+        Call<ResponseBody> userCall = mService.Mobileattendance(date);
         userCall.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -212,37 +205,50 @@ public class DailyAttendanceReportActivity extends AppCompatActivity {
                 try {
                     String data = user.string();
                     JSONObject responsejobj = new JSONObject(data);
+
                     services.clear();
+
                     String stauts = responsejobj.getString("Status_Code");
                     String message = responsejobj.getString("Message");
 
                     if (stauts.equalsIgnoreCase("200")) {
-                        JSONArray coursearray = responsejobj.getJSONArray("Data");
+                        JSONArray coursearray = responsejobj.getJSONArray("Data1");
+
                         for (int i = 0; i < coursearray.length(); i++) {
                             JSONObject dataobj = coursearray.getJSONObject(i);
-                            String Name = dataobj.getString("EMPNAME");
-                            String Intime = dataobj.getString("Intime");
-                            String Outtime = dataobj.getString("OutTime");
+                            String EmpName = dataobj.getString("EmpName");
+                            String EmpCode = dataobj.getString("EmpCode");
+                            String Date = dataobj.getString("DateofThumb");
+                            String Id = dataobj.getString("id");
+                            String Days = dataobj.getString("Days");
+                            String Intime = dataobj.getString("timeofthumb");
+                            //String Outtime = dataobj.getString("OutTime");
+                            String Image = dataobj.getString("Image");
+                            String InAddress = dataobj.getString("InAddress");
 
 //                            double intime  =  Double.parseDouble(Intime);
 //                            double outtime =  Double.parseDouble(Outtime);
 //                            double TotalTime = outtime - intime;
 
-                            DailyAttendanceModel model = new DailyAttendanceModel();
-                            model.setName(Name);
-                            model.setDate(date);
-                            model.setIntime(Intime);
-                            model.setOuttime(Outtime);
+                            MobileAttendanceModel model = new MobileAttendanceModel();
+                            model.setName(EmpName);
+                            model.setId(Id);
+                            model.setEmpCode(EmpCode);
+                            model.setDate(Date);
+                            model.setDays(Days);
+                            model.setInTime(Intime);
+                            //model.setOutTime(Outtime);
+                            model.setAtten_image(Image);
+                            model.setInAddress(InAddress);
                             services.add(model);
 
-                            attendanceRecycler.setLayoutManager(new LinearLayoutManager(DailyAttendanceReportActivity.this));
-                            adapter = new DailyAttendanceAdapter(getApplicationContext(),services);
-                            attendanceRecycler.setAdapter(adapter);
-                            final DailyAttendanceModel finalModel = model;
+                            adapter = new MobileAttendanceAdapter(getApplicationContext(),services);
+                            MAttendanceRecycler.setAdapter(adapter);
+                            final MobileAttendanceModel finalModel = model;
                             loading.dismiss();
                         }
                         loading.dismiss();
-                        //Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
                     }else {
                         loading.dismiss();
                         Toast.makeText(getApplicationContext(),message,Toast.LENGTH_SHORT).show();
@@ -257,7 +263,7 @@ public class DailyAttendanceReportActivity extends AppCompatActivity {
             }
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
-                Toast.makeText(DailyAttendanceReportActivity.this, t.toString(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(DailySummaryActivity.this, t.toString(), Toast.LENGTH_SHORT).show();
             }
         });
     }

@@ -1,7 +1,10 @@
 package com.libit.wingspayroll.Network;
 
 import com.libit.wingspayroll.Model.DocumentImageUploadModel;
+import com.libit.wingspayroll.Model.LeaveAppModel;
+import com.libit.wingspayroll.Model.RequestModel;
 import com.libit.wingspayroll.Model.SendAttendenceModel;
+import com.libit.wingspayroll.Model.SendAttendenceModel2;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -15,7 +18,10 @@ public interface ApiServices {
     @GET("api/Login")
     Call<ResponseBody> loginuser(@Query("ContactNo") String ContactNo);
 
-    @GET("api/Admin")
+//    @GET("api/Admin")
+//    Call<ResponseBody> loginadmin(@Query("username") String username,@Query("password") String password);
+
+    @GET("api/UserLogin")
     Call<ResponseBody> loginadmin(@Query("username") String username,@Query("password") String password);
 
     @POST ("api/Data")
@@ -28,7 +34,7 @@ public interface ApiServices {
     Call<ResponseBody> DocumentUpload(@Body DocumentImageUploadModel model);
 
     @GET("api/GetDailyAtt")
-    Call<ResponseBody> attendance(@Query("date") String date);
+    Call<ResponseBody> attendance(@Query("date") String date,@Query("unitId") Integer unitId);
 
     @GET("api/MobileAttendance")
     Call<ResponseBody> Mobileattendance(@Query("date") String date);
@@ -44,5 +50,29 @@ public interface ApiServices {
 
     @GET("api/BirthdayReport")
     Call<ResponseBody> getEmployeeBirthday();
+
+    @POST ("api/InsertData")
+    Call<ResponseBody>MarkAttendece2(@Body SendAttendenceModel2 model);
+
+    @GET("api/GetUnitList")
+    Call<ResponseBody> getUnit();
+
+    @POST("api/SaveLeaveRequest")
+    Call<ResponseBody> Leaverequest(@Body RequestModel model);
+
+    @GET ("api/GetAllLeave")
+    Call<ResponseBody>getallleave();
+
+    @GET ("api/GetAppLeave")
+    Call<ResponseBody>getAppLeave();
+
+    @POST("api/LeaveApprove")
+    Call<ResponseBody>approveleave(@Query("ID")String ID,@Body LeaveAppModel model);
+
+    @POST("api/LeavedisApprove")
+    Call<ResponseBody>disapprove(@Query("ID")String ID,@Body LeaveAppModel model);
+
+    @GET("api/GetLeaveRequest")
+    Call<ResponseBody>getmyleaverequest(@Query("Userid")String Userid);
 
 }

@@ -140,17 +140,19 @@ public class CameraActivity extends AppCompatActivity implements LocationListene
 
             String EmpId = StaticDataHelper.getStringInPreferences(getApplicationContext(), "EmpId");
             String Code = StaticDataHelper.getStringInPreferences(getApplicationContext(), "Code");
-            String Name = StaticDataHelper.getStringInPreferences(getApplicationContext(), "Name");
-            String number = StaticDataHelper.getStringInPreferences(getApplicationContext(), "number");
+            String UnitId = StaticDataHelper.getStringFromPreferences(getApplicationContext(), "UnitId");
             String address = StaticDataHelper.getStringInPreferences(getApplicationContext(), "address");
+            String latitude1=String.valueOf(latitude_double);
+            String longitude1=String.valueOf(longitude_double);
 
 //          Toast.makeText(CameraActivity.this,name+"\n"+Id,Toast.LENGTH_SHORT).show();
 
             SendAttendenceModel model = new SendAttendenceModel();
-            //model.setEmpid(EmpId);
+            model.setEmpId(EmpId);
             model.setEmpCode(Code);
-//            model.setEmployee_Name(Name);
-//            model.setEmployee_number(number);
+            model.setInLatitude(latitude1);
+            model.setInLongitude(longitude1);
+            model.setUnitId(UnitId);
             model.setAtten_image(uploadImagePhoto);
 
             if (address.equals("null")){
@@ -194,14 +196,12 @@ public class CameraActivity extends AppCompatActivity implements LocationListene
                         Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
                         pd.dismiss();
                     }
-
                 } catch (JSONException e) {
                     e.printStackTrace();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
-
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
 
@@ -211,9 +211,7 @@ public class CameraActivity extends AppCompatActivity implements LocationListene
 
 
 
-    //----------------------------Location code----------------------------------------
-
-
+    //------------------------------------------Location code----------------------------------------
     @Override
     public void onLocationChanged(Location location) {
         int lat = (int) (location.getLatitude());
@@ -352,7 +350,6 @@ public class CameraActivity extends AppCompatActivity implements LocationListene
     }
 
     public void geocede() {
-
         Geocoder geocoder;
         List<Address> addresses;
         geocoder = new Geocoder(CameraActivity.this, Locale.getDefault());

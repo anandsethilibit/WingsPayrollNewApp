@@ -84,6 +84,7 @@ public class LoginActivity extends AppCompatActivity {
                 }
             }
         });
+
     }
 
 
@@ -109,14 +110,14 @@ public class LoginActivity extends AppCompatActivity {
                         String Name = jobj.getString("Name");
                         String DepName = jobj.getString("DepName");
                         String DesName = jobj.getString("DesName");
-                        String UnitName = jobj.getString("UnitName");
+                        String UnitId = jobj.getString("UnitId");
 
                         StaticDataHelper.setStringInPreferences(LoginActivity.this, "EmpId", EmpId);
                         StaticDataHelper.setStringInPreferences(LoginActivity.this, "Code", Code);
                         StaticDataHelper.setStringInPreferences(LoginActivity.this, "Name", Name);
                         StaticDataHelper.setStringInPreferences(LoginActivity.this, "DepName", DepName);
                         StaticDataHelper.setStringInPreferences(LoginActivity.this, "DesName", DesName);
-                        StaticDataHelper.setStringInPreferences(LoginActivity.this, "UnitName", UnitName);
+                        StaticDataHelper.setStringInPreferences(LoginActivity.this, "UnitId", UnitId);
                         StaticDataHelper.setStringInPreferences(LoginActivity.this, "Usertype", "Employee");
                         StaticDataHelper.setBooleanInPreferences(getApplicationContext(), "islogin", true);
                         startActivity(new Intent(LoginActivity.this, MainActivity.class));
@@ -137,7 +138,9 @@ public class LoginActivity extends AppCompatActivity {
 
             }
         });
+
     }
+
 
 //    private void login(String mobileno){
 //        mService= ApiClient.getClient().create(ApiServices.class);

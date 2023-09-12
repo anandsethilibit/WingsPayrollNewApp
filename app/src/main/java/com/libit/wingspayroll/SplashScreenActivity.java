@@ -42,7 +42,11 @@ public class SplashScreenActivity extends AppCompatActivity {
             @Override
             public void run() {
                 if (StaticDataHelper.getBooleanFromPreferences(SplashScreenActivity.this, "islogin")) {
-                    Intent intent = new Intent(SplashScreenActivity.this, Splash2Activity.class);
+                    Intent intent = new Intent(SplashScreenActivity.this, MainActivity.class);
+                    startActivity(intent);
+                    SplashScreenActivity.this.finish();
+                }else if(StaticDataHelper.getBooleanFromPreferences(SplashScreenActivity.this, "isAdminlogin")){
+                    Intent intent = new Intent(SplashScreenActivity.this, MainActivity.class);
                     startActivity(intent);
                     SplashScreenActivity.this.finish();
                 } else {

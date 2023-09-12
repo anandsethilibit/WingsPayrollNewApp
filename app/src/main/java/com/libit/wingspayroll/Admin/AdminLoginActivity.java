@@ -122,19 +122,25 @@ public class AdminLoginActivity extends AppCompatActivity {
                     String Message = responsejobj.getString("Message");
 
                     if (status.equalsIgnoreCase("200")) {
-
-                        JSONObject jobj = responsejobj.getJSONObject("AdminLogin");
+                        JSONObject jobj = responsejobj.getJSONObject("user");
                         String EmpId = jobj.getString("UserId");
-                        String Name = jobj.getString("Name");
+                        String DisplayName = jobj.getString("DisplayName");
+                        String UserLogId = jobj.getString("UserLogId");
+                        String UserStatus = jobj.getString("UserStatus");
 
-                        StaticDataHelper.setStringInPreferences(AdminLoginActivity.this, "EmpId", EmpId);
-                        StaticDataHelper.setStringInPreferences(AdminLoginActivity.this, "Name", Name);
-                        StaticDataHelper.setStringInPreferences(AdminLoginActivity.this, "Usertype", "Admin");
-                        StaticDataHelper.setBooleanInPreferences(getApplicationContext(), "isAdminlogin", true);
-                        startActivity(new Intent(AdminLoginActivity.this, MainActivity.class));
-                        finish();
-                        loading.dismiss();
-
+                        if(UserStatus.equals("Active")) {
+                            StaticDataHelper.setStringInPreferences(AdminLoginActivity.this, "EmpId", EmpId);
+                            StaticDataHelper.setStringInPreferences(AdminLoginActivity.this, "Name", DisplayName);
+                            StaticDataHelper.setStringInPreferences(AdminLoginActivity.this, "UserStatus", UserStatus);
+                            StaticDataHelper.setStringInPreferences(AdminLoginActivity.this, "UserLogId", UserLogId);
+                            StaticDataHelper.setStringInPreferences(AdminLoginActivity.this, "Usertype", "Admin");
+                            StaticDataHelper.setBooleanInPreferences(getApplicationContext(), "isAdminlogin", true);
+                            startActivity(new Intent(AdminLoginActivity.this, MainActivity.class));
+                            finish();
+                            loading.dismiss();
+                        }else {
+                            Toast.makeText(AdminLoginActivity.this, "User DeActive", Toast.LENGTH_SHORT).show();
+                        }
                     } else {
                         Toast.makeText(getApplicationContext(), Message, Toast.LENGTH_SHORT).show();
                         loading.dismiss();
@@ -145,12 +151,10 @@ public class AdminLoginActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
             }
-
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
 
             }
         });
     }
-
 }

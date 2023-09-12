@@ -9,6 +9,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -48,6 +49,7 @@ public class MonthlyAttendanceReport2Activity extends AppCompatActivity {
     TextView username;
     MonthlyAttendanceAdapter mAdapter;
     List<MonthlyAttendanceModel> services;
+    ProgressBar prgruser;
     RecyclerView monthlyrecyclerview;
 
     int MonthNumber;
@@ -68,6 +70,8 @@ public class MonthlyAttendanceReport2Activity extends AppCompatActivity {
         btngetMonthlyReport=findViewById(R.id.getAttendanceMonthly);
         Userspinner = findViewById(R.id.Userspinner);
         monthlyrecyclerview=findViewById(R.id.recview);
+        prgruser=findViewById(R.id.prgruser);
+        prgruser.setVisibility(View.GONE);
         username=findViewById(R.id.txtusername);
         backbtn = findViewById(R.id.backbtn);
         nametxt = findViewById(R.id.nametxt);
@@ -87,6 +91,7 @@ public class MonthlyAttendanceReport2Activity extends AppCompatActivity {
         UserId = StaticDataHelper.getStringFromPreferences(MonthlyAttendanceReport2Activity.this, "EmpId");
 
         if(UserType.equalsIgnoreCase("Admin")){
+            getuser();
             Userspinner.setVisibility(View.VISIBLE);
             username.setVisibility(View.GONE);
 
@@ -97,13 +102,13 @@ public class MonthlyAttendanceReport2Activity extends AppCompatActivity {
             userdata=UserId;
         }
 
-        getuser();
+
 
         Userspinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 userdata = user_id.get(position);
-                Snackbar.make(view, " EmpId " +userdata+ " Selected ", Snackbar.LENGTH_SHORT).show();
+                //Snackbar.make(view, " EmpId " +userdata+ " Selected ", Snackbar.LENGTH_SHORT).show();
             }
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
@@ -145,6 +150,7 @@ public class MonthlyAttendanceReport2Activity extends AppCompatActivity {
                 }
             }
         });
+
     }
 
 
@@ -154,6 +160,7 @@ public class MonthlyAttendanceReport2Activity extends AppCompatActivity {
     }
 
     private void getuser() {
+        prgruser.setVisibility(View.VISIBLE);
         mService = ApiClient.getClient().create(ApiServices.class);
         Call<ResponseBody> userCall = mService.getEmployee();
         userCall.enqueue(new Callback<ResponseBody>() {
@@ -188,12 +195,16 @@ public class MonthlyAttendanceReport2Activity extends AppCompatActivity {
                             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                             Userspinner.setAdapter(adapter);
                         }
+                        prgruser.setVisibility(View.GONE);
                     } else {
+                        prgruser.setVisibility(View.GONE);
                         Toast.makeText(MonthlyAttendanceReport2Activity.this, message, Toast.LENGTH_SHORT).show();
                     }
                 } catch (JSONException e) {
+                    prgruser.setVisibility(View.GONE);
                     e.printStackTrace();
                 } catch (IOException e) {
+                    prgruser.setVisibility(View.GONE);
                     e.printStackTrace();
                 }
             }
@@ -273,12 +284,7 @@ public class MonthlyAttendanceReport2Activity extends AppCompatActivity {
         });
     }
 
-
-
-
-
-    class MonthlySpinnerClass implements AdapterView.OnItemSelectedListener
-    {
+    class MonthlySpinnerClass implements AdapterView.OnItemSelectedListener {
         public void onItemSelected(AdapterView<?> parent, View v, int position, long id)
         {
             Month = monthlist[position];
@@ -292,9 +298,7 @@ public class MonthlyAttendanceReport2Activity extends AppCompatActivity {
         }
     }
 
-
-    class YearlySpinnerClass implements AdapterView.OnItemSelectedListener
-    {
+    class YearlySpinnerClass implements AdapterView.OnItemSelectedListener {
         public void onItemSelected(AdapterView<?> parent, View v, int position, long id)
         {
             Year=yearlist[position];

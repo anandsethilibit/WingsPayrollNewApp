@@ -1,6 +1,6 @@
 package com.libit.wingspayroll.Model;
 
-public class LeaveApprovalModel {
+public class LeaveListModel {
     String ID ;
     String Type ;
     String Date;
@@ -10,15 +10,9 @@ public class LeaveApprovalModel {
     String reason ;
     String UserName ;
     String RequestDate;
+    String AName;
+    String ADate;
     String Days;
-
-    public String getUserName() {
-        return UserName;
-    }
-
-    public void setUserName(String userName) {
-        UserName = userName;
-    }
 
     public String getID() {
         return ID;
@@ -76,12 +70,36 @@ public class LeaveApprovalModel {
         this.reason = reason;
     }
 
+    public String getUserName() {
+        return UserName;
+    }
+
+    public void setUserName(String userName) {
+        UserName = userName;
+    }
+
     public String getRequestDate() {
         return RequestDate;
     }
 
     public void setRequestDate(String requestDate) {
         RequestDate = requestDate;
+    }
+
+    public String getAName() {
+        return AName;
+    }
+
+    public void setAName(String AName) {
+        this.AName = AName;
+    }
+
+    public String getADate() {
+        return ADate;
+    }
+
+    public void setADate(String ADate) {
+        this.ADate = ADate;
     }
 
     public String getDays() {

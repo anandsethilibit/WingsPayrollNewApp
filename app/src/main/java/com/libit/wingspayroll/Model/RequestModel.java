@@ -2,12 +2,15 @@ package com.libit.wingspayroll.Model;
 
 public class RequestModel {
 
-
+    String Username;
     String Id ;
     String Status ;
     String SelectDate ;
     String FDate ;
     String Reason ;
+    String TDate ;
+    String Days;
+    String LeaveRequestType;
 
 
 
@@ -38,8 +41,6 @@ public class RequestModel {
     public void setReason(String reason) {
         Reason = reason;
     }
-
-
 
     public String getId() {
         return Id;
@@ -81,8 +82,29 @@ public class RequestModel {
         this.TDate = TDate;
     }
 
-    String TDate ;
+    public String getUsername() {
+        return Username;
+    }
 
+    public void setUsername(String username) {
+        Username = username;
+    }
+
+    public String getDays() {
+        return Days;
+    }
+
+    public void setDays(String days) {
+        Days = days;
+    }
+
+    public String getLeaveRequestType() {
+        return LeaveRequestType;
+    }
+
+    public void setLeaveRequestType(String leaveRequestType) {
+        LeaveRequestType = leaveRequestType;
+    }
 }
 
 
